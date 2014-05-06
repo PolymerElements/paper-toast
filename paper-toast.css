@@ -23,7 +23,6 @@
 }
 
 :host(.core-transition.dragging) {
-  -webkit-transition: none;
   transition: none;
 }
 
