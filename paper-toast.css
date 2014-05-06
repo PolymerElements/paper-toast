@@ -12,6 +12,16 @@
   left: 12px;
 }
 
+:host(.capsule) {
+  border-radius: 24px;
+}
+
+:host(.fit-bottom) {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
 :host(.core-transition.dragging) {
   -webkit-transition: none;
   transition: none;
@@ -21,6 +31,9 @@
   opacity: 0;
   -webkit-transform: translate(0, 100%);
   transform: translate(0, 100%);
+  transition: -webkit-transform 0.08s ease-in-out, opacity 0.08s ease-in;
+  transition: transform 0.08s ease-in-out, opacity 0.08s ease-in;
+  
 }
 
 .toast-container {
