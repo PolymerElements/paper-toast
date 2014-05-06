@@ -1,0 +1,194 @@
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`paper-toast` provides lightweight feedback about an operation in a small popup 
+at the base of the screen on mobile and at the lower left on desktop. Toasts are 
+above all over elements on screen, including the FAB.
+
+Toasts automatically disappear after a timeout or after user interaction 
+elsewhere on the screen, whichever comes first. Toasts can be swiped down off 
+screen.  There can be only one on the screen at a time.
+
+Example:
+
+    <paper-toast id="toast1" text="Your draft has been discarded."></paper-toast>
+    
+    <script>
+      this.$.toast1.show();
+    </script>
+    
+An action button can be presented in the toast.
+
+Example:
+
+    <paper-toast id="toast2" text="Connection timed out. Showing limited messages.">
+      <div style="color: blue;" on-tap="{{retry}}">Retry</div>
+    </paper-toast>
+
+@group Quantum Paper Elements
+@element paper-toast
+@homepage github.io
+-->
+
+<link rel="import" href="../core-layout/core-layout.html" >
+<link rel="import" href="../core-overlay/core-overlay.html">
+<link rel="import" href="../core-transition/core-transition-css.html">
+
+<polymer-element name="paper-toast" attributes="text duration opened">
+
+<template>
+
+  <link rel="stylesheet" href="paper-toast.css" >
+
+  <core-overlay opened="{{opened}}" target="{{}}" sizingTarget="{{$.container}}" transition="core-transition-bottom"></core-overlay>
+
+  <core-layout class="toast-container">
+
+    <div class="toast-text">{{text}}</div>
+    
+    <div class="toast-text toast-action" on-tap="{{dismiss}}">
+      <content></content>
+    </div>
+
+  </core-layout>
+
+</template>
+<script>
+
+  (function() {
+  
+    var currentToast;
+  
+    Polymer('paper-toast', {
+  
+      /**
+       * The text shows in a toast.
+       *
+       * @attribute text
+       * @type string
+       * @default ''
+       */
+      text: '',
+      
+      /**
+       * The duration in milliseconds to show the toast.
+       *
+       * @attribute duration
+       * @type number
+       * @default 3000
+       */
+      duration: 3000,
+      
+      /**
+       * Set opened to true to show the toast and to false to hide it.
+       *
+       * @attribute opened
+       * @type boolean
+       * @default false
+       */
+      opened: false,
+      
+      swipeable: true,
+      
+      eventDelegates: {
+        trackstart: 'trackStart',
+        track: 'track',
+        trackend: 'trackEnd',
+        transitionend: 'transitionEnd'
+      },
+      
+      openedChanged: function() {
+        if (this.opened) {
+          this.dismissJob = this.job(this.dismissJob, this.dismiss, this.duration);
+        } else {
+          this.dismissJob && this.dismissJob.stop();
+          this.dismiss();
+        }
+      },
+      
+      /** 
+       * Toggle the opened state of the toast.
+       * @method toggle
+       */
+      toggle: function() {
+        this.opened = !this.opened;
+      },
+      
+      /** 
+       * Show the toast for the specified duration
+       * @method show
+       */
+      show: function() {
+        if (currentToast) {
+          currentToast.dismiss();
+        }
+        currentToast = this;
+        this.opened = true;
+      },
+      
+      /** 
+       * Dismiss the toast and hide it.
+       * @method dismiss
+       */
+      dismiss: function() {
+        if (this.dragging) {
+          this.shouldDismiss = true;
+        } else {
+          this.opened = false;
+          if (currentToast === this) {
+            currentToast = null;
+          }
+        }
+      },
+      
+      trackStart: function(e) {
+        if (this.swipeable) {
+          e.preventTap();
+          this.h = this.offsetHeight;
+          this.dragging = true;
+          this.classList.add('dragging');
+        }
+      },
+      
+      track: function(e) {
+        if (this.dragging) {
+          var y = Math.max(0, e.dy);
+          this.style.opacity = (this.h - Math.abs(y)) / this.h;
+          this.style.webkitTransform = this.style.transform = 
+              'translate3d(0, ' + y + 'px, 0)';
+        }
+      },
+      
+      trackEnd: function(e) {
+        if (this.dragging) {
+          this.classList.remove('dragging');
+          this.style.opacity = null;
+          this.style.webkitTransform = this.style.transform = null;
+          this.classList.toggle('fade-out', e.yDirection === 1);
+          this.dragging = false;
+        }
+      },
+      
+      transitionEnd: function() {
+        if (this.classList.contains('fade-out')) {
+          this.dismiss();
+          this.classList.remove('fade-out');
+        } else if (this.shouldDismiss) {
+          this.dismiss();
+        }
+        this.shouldDismiss = false;
+      }
+  
+    });
+    
+  })();
+
+</script>
+</polymer-element>

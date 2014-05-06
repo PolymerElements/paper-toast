@@ -1,0 +1,38 @@
+:host {
+  display: inline-block;
+  background: #323232;
+  color: #fff;
+  min-height: 48px;
+  padding: 16px 24px 12px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  border-radius: 2px;
+  bottom: 12px;
+  left: 12px;
+}
+
+:host(.core-transition.dragging) {
+  -webkit-transition: none;
+  transition: none;
+}
+
+:host(.core-transition.fade-out) {
+  opacity: 0;
+  -webkit-transform: translate(0, 100%);
+  transform: translate(0, 100%);
+}
+
+.toast-container {
+  overflow: hidden;
+}
+
+.toast-text {
+  font-size: 14px;
+}
+
+.toast-action {
+  padding-left: 24px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
