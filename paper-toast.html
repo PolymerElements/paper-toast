@@ -151,6 +151,8 @@ Example:
       trackStart: function(e) {
         if (this.swipeable) {
           e.preventTap();
+          this.vertical = e.yDirection;
+          this.w = this.offsetWidth;
           this.h = this.offsetHeight;
           this.dragging = true;
           this.classList.add('dragging');
@@ -159,10 +161,16 @@ Example:
       
       track: function(e) {
         if (this.dragging) {
-          var y = Math.max(0, e.dy);
-          this.style.opacity = (this.h - Math.abs(y)) / this.h;
-          this.style.webkitTransform = this.style.transform = 
-              'translate3d(0, ' + y + 'px, 0)';
+          var s = this.style;
+          if (this.vertical) {
+            var y = Math.max(0, e.dy);
+            s.opacity = (this.h - Math.abs(y)) / this.h;
+            s.webkitTransform = s.transform =  'translate3d(0, ' + y + 'px, 0)';
+          } else {
+            var x = e.dx;
+            s.opacity = (this.w - Math.abs(x)) / this.w;
+            s.webkitTransform = s.transform = 'translate3d(' + x + 'px, 0, 0)';
+          }
         }
       },
       
@@ -171,15 +179,23 @@ Example:
           this.classList.remove('dragging');
           this.style.opacity = null;
           this.style.webkitTransform = this.style.transform = null;
-          this.classList.toggle('fade-out', e.yDirection === 1);
+          var cl = this.classList;
+          if (this.vertical) {
+            cl.toggle('fade-out-down', e.yDirection === 1);
+          } else {
+            cl.toggle('fade-out-right', e.xDirection === 1 && e.dx > 0);
+            cl.toggle('fade-out-left', e.xDirection === -1 && e.dx < 0);
+          }
           this.dragging = false;
         }
       },
       
       transitionEnd: function() {
-        if (this.classList.contains('fade-out')) {
+        var cl = this.classList;
+        if (cl.contains('fade-out-right') || cl.contains('fade-out-left') || 
+            cl.contains('fade-out-down')) {
           this.dismiss();
-          this.classList.remove('fade-out');
+          cl.remove('fade-out-right', 'fade-out-left', 'fade-out-down');
         } else if (this.shouldDismiss) {
           this.dismiss();
         }
