@@ -21,7 +21,9 @@ Example:
     <paper-toast id="toast1" text="Your draft has been discarded."></paper-toast>
     
     <script>
-      this.$.toast1.show();
+      discardDraft: function() {
+        this.$.toast1.show();
+      }
     </script>
     
 An action button can be presented in the toast.
@@ -31,6 +33,24 @@ Example:
     <paper-toast id="toast2" text="Connection timed out. Showing limited messages.">
       <div style="color: blue;" on-tap="{{retry}}">Retry</div>
     </paper-toast>
+    
+Positioning toast:
+
+A standard toast appears near the lower left of the screen.  You can change the
+position by overriding bottom and left positions.
+
+  paper-toast {
+    bottom: 40px;
+    left: 10px;
+  }
+  
+And to put it fit at the bottom of the screen.
+
+  paper-toast {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
 
 @group Quantum Paper Elements
 @element paper-toast
@@ -51,7 +71,7 @@ Example:
 
   <core-layout class="toast-container">
 
-    <div class="toast-text">{{text}}</div>
+    <div class="toast-text" core-flex>{{text}}</div>
     
     <div class="toast-text toast-action" on-tap="{{dismiss}}">
       <content></content>
