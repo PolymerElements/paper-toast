@@ -2,7 +2,6 @@
   "name": "paper-toast",
   "private": true,
   "dependencies": {
-    "core-layout": "Polymer/core-layout#master",
     "core-overlay": "Polymer/core-overlay#master",
     "font-roboto2": "Polymer/font-roboto2#master",
     "paper-button": "Polymer/paper-button#master",

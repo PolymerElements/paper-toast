@@ -57,7 +57,6 @@ And to put it fit at the bottom of the screen.
 @homepage github.io
 -->
 
-<link rel="import" href="../core-layout/core-layout.html" >
 <link rel="import" href="../core-overlay/core-overlay.html">
 <link rel="import" href="../core-transition/core-transition-css.html">
 
@@ -69,15 +68,15 @@ And to put it fit at the bottom of the screen.
 
   <core-overlay opened="{{opened}}" target="{{}}" sizingTarget="{{$.container}}" transition="core-transition-bottom"></core-overlay>
 
-  <core-layout class="toast-container">
+  <div class="toast-container" horizontal layout>
 
-    <div class="toast-text" core-flex>{{text}}</div>
+    <div class="toast-text" flex>{{text}}</div>
     
     <div class="toast-text toast-action" on-tap="{{dismiss}}">
       <content></content>
     </div>
 
-  </core-layout>
+  </div>
 
 </template>
 <script>
