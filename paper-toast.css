@@ -20,6 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   bottom: 12px;
   left: 12px;
   font-size: 14px;
+  cursor: default;
 }
 
 :host(.capsule) {
