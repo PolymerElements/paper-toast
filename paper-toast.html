@@ -10,7 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!--
 `paper-toast` provides lightweight feedback about an operation in a small popup 
 at the base of the screen on mobile and at the lower left on desktop. Toasts are 
-above all over elements on screen, including the FAB.
+above all other elements on screen, including the FAB.
 
 Toasts automatically disappear after a timeout or after user interaction 
 elsewhere on the screen, whichever comes first. Toasts can be swiped off 
@@ -39,18 +39,18 @@ Positioning toast:
 A standard toast appears near the lower left of the screen.  You can change the
 position by overriding bottom and left positions.
 
-  paper-toast {
-    bottom: 40px;
-    left: 10px;
-  }
+    paper-toast {
+      bottom: 40px;
+      left: 10px;
+    }
   
 And to put it fits at the bottom of the screen.
 
-  paper-toast {
-    bottom: 0;
-    left: 0;
-    width: 100%;
-  }
+    paper-toast {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
   
 When the screen size is smaller than the `responsiveWidth` (default to 480px),
 the toast will automatically fits at the bottom of the screen.
