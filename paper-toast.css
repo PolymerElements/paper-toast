@@ -30,6 +30,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   bottom: 0;
   left: 0;
   width: 100%;
+  border-radius: 0;
 }
 
 :host(.core-transition.dragging) {
@@ -37,6 +38,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 }
 
 :host(.core-transition.fade-out-down),
+:host(.core-transition.fade-out-up),
 :host(.core-transition.fade-out-right),
 :host(.core-transition.fade-out-left) {
   opacity: 0;
@@ -47,6 +49,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 :host(.core-transition.fade-out-down) {
   -webkit-transform: translate(0, 100%);
   transform: translate(0, 100%);
+}
+
+:host(.core-transition.fade-out-up) {
+  -webkit-transform: translate(0, -100%);
+  transform: translate(0, -100%);
 }
 
 :host(.core-transition.fade-out-right) {

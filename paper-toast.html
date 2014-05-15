@@ -13,7 +13,7 @@ at the base of the screen on mobile and at the lower left on desktop. Toasts are
 above all over elements on screen, including the FAB.
 
 Toasts automatically disappear after a timeout or after user interaction 
-elsewhere on the screen, whichever comes first. Toasts can be swiped down off 
+elsewhere on the screen, whichever comes first. Toasts can be swiped off 
 screen.  There can be only one on the screen at a time.
 
 Example:
@@ -44,13 +44,16 @@ position by overriding bottom and left positions.
     left: 10px;
   }
   
-And to put it fit at the bottom of the screen.
+And to put it fits at the bottom of the screen.
 
   paper-toast {
     bottom: 0;
     left: 0;
     width: 100%;
   }
+  
+When the screen size is smaller than the `responsiveWidth` (default to 480px),
+the toast will automatically fits at the bottom of the screen.
 
 @group Quantum Paper Elements
 @element paper-toast
@@ -59,8 +62,9 @@ And to put it fit at the bottom of the screen.
 
 <link rel="import" href="../core-overlay/core-overlay.html">
 <link rel="import" href="../core-transition/core-transition-css.html">
+<link rel="import" href="../core-media-query/core-media-query.html">
 
-<polymer-element name="paper-toast" attributes="text duration opened">
+<polymer-element name="paper-toast" attributes="text duration opened responsiveWidth swipeDisabled">
 
 <template>
 
@@ -77,6 +81,8 @@ And to put it fit at the bottom of the screen.
     </div>
 
   </div>
+  
+  <core-media-query query="max-width: {{responsiveWidth}}" queryMatches="{{narrowMode}}"></core-media-query>
 
 </template>
 <script>
@@ -114,13 +120,34 @@ And to put it fit at the bottom of the screen.
        */
       opened: false,
       
-      swipeable: true,
+      /**
+       * Min-width when the toast changes to narrow layout.  In narrow layout,
+       * the toast fits at the bottom of the screen when opened.
+       *
+       * @attribute responsiveWidth
+       * @type string
+       * @default '480px'
+       */
+      responsiveWidth: '480px',
+      
+      /**
+       * If true, the toast can't be swiped.
+       *
+       * @attribute swipeDisabled
+       * @type boolean
+       * @default false
+       */
+      swipeDisabled: false,
       
       eventDelegates: {
         trackstart: 'trackStart',
         track: 'track',
         trackend: 'trackEnd',
         transitionend: 'transitionEnd'
+      },
+      
+      narrowModeChanged: function() {
+        this.classList.toggle('fit-bottom', this.narrowMode);
       },
       
       openedChanged: function() {
@@ -168,7 +195,7 @@ And to put it fit at the bottom of the screen.
       },
       
       trackStart: function(e) {
-        if (this.swipeable) {
+        if (!this.swipeDisabled) {
           e.preventTap();
           this.vertical = e.yDirection;
           this.w = this.offsetWidth;
@@ -182,7 +209,7 @@ And to put it fit at the bottom of the screen.
         if (this.dragging) {
           var s = this.style;
           if (this.vertical) {
-            var y = Math.max(0, e.dy);
+            var y = e.dy;
             s.opacity = (this.h - Math.abs(y)) / this.h;
             s.webkitTransform = s.transform =  'translate3d(0, ' + y + 'px, 0)';
           } else {
@@ -200,7 +227,8 @@ And to put it fit at the bottom of the screen.
           this.style.webkitTransform = this.style.transform = null;
           var cl = this.classList;
           if (this.vertical) {
-            cl.toggle('fade-out-down', e.yDirection === 1);
+            cl.toggle('fade-out-down', e.yDirection === 1 && e.dy > 0);
+            cl.toggle('fade-out-up', e.yDirection === -1 && e.dy < 0);
           } else {
             cl.toggle('fade-out-right', e.xDirection === 1 && e.dx > 0);
             cl.toggle('fade-out-left', e.xDirection === -1 && e.dx < 0);
@@ -212,9 +240,10 @@ And to put it fit at the bottom of the screen.
       transitionEnd: function() {
         var cl = this.classList;
         if (cl.contains('fade-out-right') || cl.contains('fade-out-left') || 
-            cl.contains('fade-out-down')) {
+            cl.contains('fade-out-down') || cl.contains('fade-out-up')) {
           this.dismiss();
-          cl.remove('fade-out-right', 'fade-out-left', 'fade-out-down');
+          cl.remove('fade-out-right', 'fade-out-left', 
+              'fade-out-down', 'fade-out-up');
         } else if (this.shouldDismiss) {
           this.dismiss();
         }
