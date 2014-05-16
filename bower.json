@@ -5,7 +5,6 @@
     "core-media-query": "Polymer/core-media-query#master",
     "core-overlay": "Polymer/core-overlay#master",
     "font-roboto2": "Polymer/font-roboto2#master",
-    "paper-button": "Polymer/paper-button#master",
-    "paper-transition": "Polymer/paper-transition#master"
+    "paper-button": "Polymer/paper-button#master"
   }
 }
