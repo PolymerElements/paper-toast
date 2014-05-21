@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   background: #323232;
   color: #f1f1f1;
   min-height: 48px;
+  min-width: 288px;
   padding: 16px 24px 12px;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -31,6 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   bottom: 0;
   left: 0;
   width: 100%;
+  min-width: 0;
   border-radius: 0;
 }
 
