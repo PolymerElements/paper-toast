@@ -18,17 +18,17 @@ screen.  There can be only one on the screen at a time.
 
 Example:
 
-    <paper-toast id="toast1" text="Your draft has been discarded."></paper-toast>
+    <paper-toast text="Your draft has been discarded." onclick="discardDraft(el)"></paper-toast>
     
     <script>
-      discardDraft: function() {
-        this.$.toast1.show();
+      function discardDraft(el) {
+        el.show();
       }
     </script>
     
 An action button can be presented in the toast.
 
-Example:
+Example (using Polymer's data-binding features):
 
     <paper-toast id="toast2" text="Connection timed out. Showing limited messages.">
       <div style="color: blue;" on-tap="{{retry}}">Retry</div>
@@ -44,7 +44,7 @@ position by overriding bottom and left positions.
       left: 10px;
     }
   
-And to put it fits at the bottom of the screen.
+To make it fit at the bottom of the screen:
 
     paper-toast {
       bottom: 0;
