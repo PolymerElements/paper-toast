@@ -86,13 +86,13 @@ Fired when the `paper-toast` has completely closed.
 <link rel="import" href="../core-transition/core-transition-css.html">
 <link rel="import" href="../core-media-query/core-media-query.html">
 
-<polymer-element name="paper-toast" attributes="text duration opened responsiveWidth swipeDisabled" role="status">
+<polymer-element name="paper-toast" attributes="text duration opened responsiveWidth swipeDisabled autoCloseDisabled" role="status">
 
 <template>
 
   <link rel="stylesheet" href="paper-toast.css" >
 
-  <core-overlay id="overlay" autoFocusDisabled opened="{{opened}}" target="{{}}" transition="core-transition-bottom"></core-overlay>
+  <core-overlay id="overlay" autoFocusDisabled autoCloseDisabled="{{autoCloseDisabled}}" opened="{{opened}}" target="{{}}" transition="core-transition-bottom"></core-overlay>
 
   <div class="toast-container" horizontal layout>
 
@@ -160,6 +160,17 @@ Fired when the `paper-toast` has completely closed.
        * @default false
        */
       swipeDisabled: false,
+      
+      /**
+       * By default, the toast will close automatically if the user taps
+       * outside it or presses the escape key. Disable this behavior by setting
+       * the `autoCloseDisabled` property to true.
+       *
+       * @attribute autoCloseDisabled
+       * @type boolean
+       * @default false
+       */
+      autoCloseDisabled: false,
       
       narrowMode: false,
       
