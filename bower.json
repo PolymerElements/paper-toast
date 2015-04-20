@@ -2,9 +2,12 @@
   "name": "paper-toast",
   "private": true,
   "dependencies": {
-    "core-media-query": "Polymer/core-media-query#master",
-    "core-overlay": "Polymer/core-overlay#master",
-    "font-roboto": "Polymer/font-roboto#master",
-    "paper-button": "Polymer/paper-button#master"
+    "polymer": "Polymer/polymer#0.8.0-rc.7",
+    "paper-styles": "PolymerElements/paper-styles#^0.8.6"
+  },
+  "devDependencies": {
+    "iron-doc-viewer": "polymerelements/iron-doc-viewer#^0.8.0",
+    "paper-button": "polymerelements/paper-button#^0.8.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.6.1"
   }
 }
