@@ -3,6 +3,7 @@
   "version": "0.9.3",
   "description": "A material design notification toast",
   "private": true,
+  "license": "http://polymer.github.io/LICENSE.txt",
   "authors": [
     "The Polymer Authors"
   ],
