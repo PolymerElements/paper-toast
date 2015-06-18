@@ -13,6 +13,10 @@
     "toast",
     "notification"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/paper-toast.git"
+  },
   "main": "paper-toast.html",
   "dependencies": {
     "paper-styles": "PolymerElements/paper-styles#^1.0.0",
