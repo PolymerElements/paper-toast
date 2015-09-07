@@ -9,8 +9,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../paper-styles/typography.html">
 <link rel="import" href="../iron-a11y-announcer/iron-a11y-announcer.html">
+<link rel="import" href="../iron-overlay-behavior/iron-overlay-behavior.html">
 
 <!--
 `paper-toast` provides a subtle notification toast.
@@ -25,27 +25,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     :host {
       display: inline-block;
       position: fixed;
-
-      background: #323232;
-      color: #f1f1f1;
       min-height: 48px;
       min-width: 288px;
+      bottom: 12px;
+      left: 12px;
+      background: #323232;
+      color: #F1F1F1;
       padding: 16px 24px 12px;
       box-sizing: border-box;
       box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
       border-radius: 2px;
-      bottom: 12px;
-      left: 12px;
       font-size: 14px;
       cursor: default;
 
-      -webkit-transition: visibility 0.3s, -webkit-transform 0.3s;
-      transition: visibility 0.3s, transform 0.3s;
-
-      -webkit-transform: translateY(100px);
-      transform: translateY(100px);
-
-      visibility: hidden;
+      @apply(--paper-toast);
     }
 
     :host(.capsule) {
@@ -60,9 +53,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       border-radius: 0;
     }
 
-    :host(.paper-toast-open){
-      visibility: visible;
+    :host(.paper-toast-close) {
+      -webkit-transition: visibility 0.3s, -webkit-transform 0.3s;
+      transition: visibility 0.3s, transform 0.3s;
+      -webkit-transform: translateY(100px);
+      transform: translateY(100px);
+    }
 
+    :host(.paper-toast-open) {
       -webkit-transform: translateY(0px);
       transform: translateY(0px);
     }
@@ -78,6 +76,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   var PaperToast = Polymer({
     is: 'paper-toast',
 
+    behaviors: [ Polymer.IronOverlayBehavior ],
+
     properties: {
       /**
        * The duration in milliseconds to show the toast.
@@ -92,7 +92,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        */
       text: {
         type: String,
-        value: ""
+        value: ''
       },
 
       /**
@@ -101,9 +101,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       visible: {
         type: Boolean,
         readOnly: true,
-        value: false,
-        observer: '_visibleChanged'
+        value: false
       }
+    },
+
+    listeners: {
+      'iron-overlay-closed': '_onIronOverlayClosed',
+      'iron-overlay-opened': '_onIronOverlayOpened'
     },
 
     created: function() {
@@ -111,50 +115,51 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     ready: function() {
-      this.async(function() {
-        this.hide();
-      });
+      this.noCancelOnOutsideClick = true;
+      this.noAutoFocus = true;
+      this.autoFitOnAttach = true;
     },
 
-    /**
-     * Show the toast.
-     * @method show
-     */
-    show: function() {
+    // API
+
+    open: function() {
       if (PaperToast.currentToast) {
-        PaperToast.currentToast.hide();
+         PaperToast.currentToast.close();
       }
       PaperToast.currentToast = this;
-      this.removeAttribute('aria-hidden');
+
+      Polymer.IronOverlayBehaviorImpl.open.call(this);
+    },
+
+    close: function() {
+      Polymer.IronOverlayBehaviorImpl.close.call(this);
+    },
+
+    // BC aliases
+    show: function() {
+      this.open();
+    },
+
+    hide: function() {
+      this.close();
+    },
+
+    toggle: function() {
+      this.toggle();
+    },
+
+    // Event handlers
+
+    _onIronOverlayClosed: function() {
+      this._setVisible(false);
+    },
+
+    _onIronOverlayOpened: function() {
       this._setVisible(true);
       this.fire('iron-announce', {
         text: this.text
       });
-      this.debounce('hide', this.hide, this.duration);
-    },
-
-    /**
-     * Hide the toast
-     */
-    hide: function() {
-      this.setAttribute('aria-hidden', 'true');
-      this._setVisible(false);
-    },
-
-    /**
-     * Toggle the opened state of the toast.
-     * @method toggle
-     */
-    toggle: function() {
-      if (!this.visible) {
-        this.show();
-      } else {
-        this.hide();
-      }
-    },
-
-    _visibleChanged: function(visible) {
-      this.toggleClass('paper-toast-open', visible);
+      this.debounce('auto-close', this.close, this.duration);
     }
   });
 
