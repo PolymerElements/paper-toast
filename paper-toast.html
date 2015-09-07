@@ -108,8 +108,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       this.autoFitOnAttach = true;
     },
 
-    // API
-
+    /**
+     * Open the toast.
+     * @method close
+     */
     open: function() {
       if (PaperToast.currentToast) {
          PaperToast.currentToast.close();
@@ -119,25 +121,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       Polymer.IronOverlayBehaviorImpl.open.call(this);
     },
 
+    /**
+     * Close the toast.
+     * @method close
+     */
     close: function() {
       Polymer.IronOverlayBehaviorImpl.close.call(this);
     },
 
-    // BC aliases
+    /**
+     * Show the toast.
+     * Alias for the open method.
+     * @method show
+     */
     show: function() {
       this.open();
     },
 
+    /**
+     * Hide the toast.
+     * Alias for the close method.
+     * @method hide
+     */
     hide: function() {
       this.close();
     },
 
+    /**
+     * Toggle the opened state of the toast.
+     * @method toggle
+     */
     toggle: function() {
-      Polymer.IronOverlayBehaviorImpl.toggle.call(this);
+      if (!this.opened) {
+        this.show();
+      } else {
+        this.hide();
+      }
     },
-
-    // Event handlers
-
+    
     _onIronOverlayClosed: function() {
       this._setVisible(false);
     },
