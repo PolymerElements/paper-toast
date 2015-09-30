@@ -15,6 +15,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!--
 `paper-toast` provides a subtle notification toast.
 
+  <paper-toast text="Toast text"></paper-toast>
+
+### Toast message
+
+It can also include custom prefix or suffix elements, which are displayed
+before or after the toast text itself. In order for an element to be
+considered as a prefix, it must have the `prefix` attribute (`suffix`
+will be used if not specified).
+
+  `<paper-toast text="Toast text">
+    <iron-icon prefix icon="cloud-upload"></iron-icon>
+  </paper-toast>`
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-toast-background` | The background color of the paper-toat | `#323232`
+`--paper-toast-color` | The paper-toast color | `#f1f1f1`
+
 @group Paper Elements
 @element paper-toast
 @demo demo/index.html
@@ -26,8 +48,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       display: inline-block;
       position: fixed;
 
-      background: #323232;
-      color: #f1f1f1;
+      background: var(--paper-toast-background, #323232);
+      color: var(--paper-toast-color, #f1f1f1);
       min-height: 48px;
       min-width: 288px;
       padding: 16px 24px 12px;
@@ -68,6 +90,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
   </style>
   <template>
+    <content select="[prefix]"></content>
     <span id="label">{{text}}</span>
     <content></content>
   </template>
