@@ -9,8 +9,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../paper-styles/typography.html">
 <link rel="import" href="../iron-a11y-announcer/iron-a11y-announcer.html">
+<link rel="import" href="../iron-overlay-behavior/iron-overlay-behavior.html">
 
 <!--
 Material design: [Snackbards & toasts](https://www.google.com/design/spec/components/snackbars-toasts.html)
@@ -27,27 +27,20 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
     :host {
       display: inline-block;
       position: fixed;
-
-      background: #323232;
-      color: #f1f1f1;
       min-height: 48px;
       min-width: 288px;
+      bottom: 12px;
+      left: 12px;
+      background: #323232;
+      color: #F1F1F1;
       padding: 16px 24px 12px;
       box-sizing: border-box;
       box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
       border-radius: 2px;
-      bottom: 12px;
-      left: 12px;
       font-size: 14px;
       cursor: default;
 
-      -webkit-transition: visibility 0.3s, -webkit-transform 0.3s;
-      transition: visibility 0.3s, transform 0.3s;
-
-      -webkit-transform: translateY(100px);
-      transform: translateY(100px);
-
-      visibility: hidden;
+      @apply(--paper-toast);
     }
 
     :host(.capsule) {
@@ -61,13 +54,6 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
       min-width: 0;
       border-radius: 0;
     }
-
-    :host(.paper-toast-open){
-      visibility: visible;
-
-      -webkit-transform: translateY(0px);
-      transform: translateY(0px);
-    }
   </style>
   <template>
     <span id="label">{{text}}</span>
@@ -79,6 +65,8 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
 
   var PaperToast = Polymer({
     is: 'paper-toast',
+
+    behaviors: [ Polymer.IronOverlayBehavior ],
 
     properties: {
       /**
@@ -94,7 +82,7 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
        */
       text: {
         type: String,
-        value: ""
+        value: ''
       },
 
       /**
@@ -103,9 +91,13 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
       visible: {
         type: Boolean,
         readOnly: true,
-        value: false,
-        observer: '_visibleChanged'
+        value: false
       }
+    },
+
+    listeners: {
+      'iron-overlay-closed': '_onIronOverlayClosed',
+      'iron-overlay-opened': '_onIronOverlayOpened'
     },
 
     created: function() {
@@ -113,34 +105,48 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
     },
 
     ready: function() {
-      this.async(function() {
-        this.hide();
-      });
+      this.noCancelOnOutsideClick = true;
+      this.noAutoFocus = true;
+      this.autoFitOnAttach = true;
+    },
+
+    /**
+     * Open the toast.
+     * @method close
+     */
+    open: function() {
+      if (PaperToast.currentToast) {
+         PaperToast.currentToast.close();
+      }
+      PaperToast.currentToast = this;
+
+      Polymer.IronOverlayBehaviorImpl.open.call(this);
+    },
+
+    /**
+     * Close the toast.
+     * @method close
+     */
+    close: function() {
+      Polymer.IronOverlayBehaviorImpl.close.call(this);
     },
 
     /**
      * Show the toast.
+     * Alias for the open method.
      * @method show
      */
     show: function() {
-      if (PaperToast.currentToast) {
-        PaperToast.currentToast.hide();
-      }
-      PaperToast.currentToast = this;
-      this.removeAttribute('aria-hidden');
-      this._setVisible(true);
-      this.fire('iron-announce', {
-        text: this.text
-      });
-      this.debounce('hide', this.hide, this.duration);
+      this.open();
     },
 
     /**
-     * Hide the toast
+     * Hide the toast.
+     * Alias for the close method.
+     * @method hide
      */
     hide: function() {
-      this.setAttribute('aria-hidden', 'true');
-      this._setVisible(false);
+      this.close();
     },
 
     /**
@@ -148,15 +154,23 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
      * @method toggle
      */
     toggle: function() {
-      if (!this.visible) {
+      if (!this.opened) {
         this.show();
       } else {
         this.hide();
       }
     },
 
-    _visibleChanged: function(visible) {
-      this.toggleClass('paper-toast-open', visible);
+    _onIronOverlayClosed: function() {
+      this._setVisible(false);
+    },
+
+    _onIronOverlayOpened: function() {
+      this._setVisible(true);
+      this.fire('iron-announce', {
+        text: this.text
+      });
+      this.debounce('auto-close', this.close, this.duration);
     }
   });
 
