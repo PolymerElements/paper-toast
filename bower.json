@@ -28,5 +28,6 @@
     "paper-button": "polymerelements/paper-button#^1.0.0",
     "web-component-tester": "*",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
-  }
+  },
+  "ignore": []
 }
