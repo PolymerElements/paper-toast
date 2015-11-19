@@ -28,8 +28,9 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
   <template>
     <style>
       :host {
-        display: inline-block;
+        display: block;
         position: fixed;
+
         background: #323232;
         color: #f1f1f1;
         min-height: 48px;
@@ -38,15 +39,18 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
         box-sizing: border-box;
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
         border-radius: 2px;
-        bottom: 12px;
-        left: 12px;
+        left: 0;
+        margin: 12px;
         font-size: 14px;
         cursor: default;
-        -webkit-transition: visibility 0.3s, -webkit-transform 0.3s;
-        transition: visibility 0.3s, transform 0.3s;
-        -webkit-transform: translateY(100px);
-        transform: translateY(100px);
+        -webkit-transition: visibility 0.3s, -webkit-transform 0.3s, opacity 0.3s;
+        transition: visibility 0.3s, transform 0.3s, opacity 0.3s;
+
         visibility: hidden;
+        bottom: -100px;
+        opacity: 0;
+        -webkit-transform: translateY(0px);
+        transform: translateY(0px);
       }
 
       :host(.capsule) {
@@ -54,17 +58,17 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
       }
 
       :host(.fit-bottom) {
-        bottom: 0;
-        left: 0;
         width: 100%;
         min-width: 0;
         border-radius: 0;
+        margin: 0;
       }
 
       :host(.paper-toast-open) {
         visibility: visible;
-        -webkit-transform: translateY(0px);
-        transform: translateY(0px);
+        opacity: 1;
+        -webkit-transform: translateY(-100px);
+        transform: translateY(-100px);
       }
     </style>
 
@@ -167,10 +171,15 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
           this.classList.remove('paper-toast-open');
         },
 
-        _onIronResize: function() {
+        /**
+         * Overridden from `IronOverlayBehavior`.
+         * iron-fit-behavior will set the inline style position: static, which
+         * causes the toast to be rendered incorrectly when opened by default.
+         */
+        _onIronResize: function(){
           Polymer.IronOverlayBehaviorImpl._onIronResize.apply(this, arguments);
           if (this.opened) {
-            // override the inline `static` setup by iron-fit-behavior since we need position: `fixed` for correct display
+            // Make sure there is no inline style for position.
             this.style.position = '';
           }
         }
