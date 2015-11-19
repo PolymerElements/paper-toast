@@ -10,6 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-a11y-announcer/iron-a11y-announcer.html">
+<link rel="import" href="../iron-overlay-behavior/iron-overlay-behavior.html">
 <link rel="import" href="../paper-styles/typography.html">
 
 <!--
@@ -29,7 +30,6 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
       :host {
         display: inline-block;
         position: fixed;
-
         background: #323232;
         color: #f1f1f1;
         min-height: 48px;
@@ -42,13 +42,10 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
         left: 12px;
         font-size: 14px;
         cursor: default;
-
-          -webkit-transition: visibility 0.3s, -webkit-transform 0.3s;
+        -webkit-transition: visibility 0.3s, -webkit-transform 0.3s;
         transition: visibility 0.3s, transform 0.3s;
-
-          -webkit-transform: translateY(100px);
+        -webkit-transform: translateY(100px);
         transform: translateY(100px);
-
         visibility: hidden;
       }
 
@@ -64,10 +61,9 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
         border-radius: 0;
       }
 
-      :host(.paper-toast-open){
+      :host(.paper-toast-open) {
         visibility: visible;
-
-          -webkit-transform: translateY(0px);
+        -webkit-transform: translateY(0px);
         transform: translateY(0px);
       }
     </style>
@@ -80,6 +76,10 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
     (function() {
       var PaperToast = Polymer({
         is: 'paper-toast',
+
+        behaviors: [
+          Polymer.IronOverlayBehavior
+        ],
 
         properties: {
           /**
@@ -95,25 +95,25 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
            */
           text: {
             type: String,
-            value: ""
+            value: ''
           },
 
           /**
-           * True if the toast is currently visible.
+           * Set to false to enable closing of the toast by clicking outside it.
            */
-          visible: {
+          noCancelOnOutsideClick: {
             type: Boolean,
-            readOnly: true,
-            observer: '_visibleChanged'
-          }
+            value: true
+          },
+        },
+
+        get visible() {
+          console.warn('`visible` is deprecated, use `opened` instead');
+          return this.opened;
         },
 
         created: function() {
           Polymer.IronA11yAnnouncer.requestAvailability();
-        },
-
-        attached: function() {
-          this.hide();
         },
 
         /**
@@ -121,50 +121,60 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
          * @method show
          */
         show: function() {
-          if (PaperToast.currentToast) {
-            PaperToast.currentToast.hide();
-          }
-          PaperToast.currentToast = this;
-          this.removeAttribute('aria-hidden');
-          this._setVisible(true);
-          this.fire('iron-announce', {
-            text: this.text
-          });
-          // auto-close if duration is a positive finite number
-          if (this.duration > 0 && this.duration !== Infinity) {
-            this.debounce('hide', this.hide, this.duration);
-          }
+          this.open();
         },
 
         /**
          * Hide the toast
          */
         hide: function() {
-          this.setAttribute('aria-hidden', 'true');
-          this._setVisible(false);
-          if (PaperToast.currentToast === this) {
-            PaperToast.currentToast = null;
-          }
+          this.close();
         },
 
         /**
-         * Toggle the opened state of the toast.
-         * @method toggle
+         * Overridden from `IronOverlayBehavior`.
+         * Called when the value of `opened` changes.
          */
-        toggle: function() {
-          if (!this.visible) {
-            this.show();
-          } else {
-            this.hide();
+        _openedChanged: function() {
+          if (this.opened) {
+            if (PaperToast.currentToast && PaperToast.currentToast !== this) {
+              PaperToast.currentToast.close();
+            }
+            PaperToast.currentToast = this;
+            this.fire('iron-announce', {
+              text: this.text
+            });
+            // auto-close if duration is a positive finite number
+            if (this.duration > 0 && this.duration !== Infinity) {
+              this.debounce('close', this.close, this.duration);
+            }
+          } else if (PaperToast.currentToast === this) {
+            PaperToast.currentToast = null;
           }
+          Polymer.IronOverlayBehaviorImpl._openedChanged.apply(this, arguments);
         },
 
-        _visibleChanged: function(visible) {
-          this.toggleClass('paper-toast-open', visible);
+        /**
+         * Overridden from `IronOverlayBehavior`.
+         */
+        _renderOpened: function() {
+          this.classList.add('paper-toast-open');
+        },
+        /**
+         * Overridden from `IronOverlayBehavior`.
+         */
+        _renderClosed: function() {
+          this.classList.remove('paper-toast-open');
+        },
+
+        _onIronResize: function() {
+          Polymer.IronOverlayBehaviorImpl._onIronResize.apply(this, arguments);
+          if (this.opened) {
+            // override the inline `static` setup by iron-fit-behavior since we need position: `fixed` for correct display
+            this.style.position = '';
+          }
         }
       });
-
-      PaperToast.currentToast = null;
     })();
   </script>
 </dom-module>
