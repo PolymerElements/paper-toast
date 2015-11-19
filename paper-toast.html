@@ -129,7 +129,10 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
       this.fire('iron-announce', {
         text: this.text
       });
-      this.debounce('hide', this.hide, this.duration);
+      // auto-close if duration is a positive finite number
+      if (this.duration > 0 && this.duration !== Infinity) {
+        this.debounce('hide', this.hide, this.duration);
+      }
     },
 
     /**

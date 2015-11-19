@@ -29,6 +29,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </test-fixture>
 
+    <test-fixture id="show">
+      <template>
+        <paper-toast></paper-toast>
+      </template>
+    </test-fixture>
+
     <script>
 
       suite('basic', function() {
@@ -40,6 +46,69 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           assert.isFalse(toast.visible, '`visible` is false');
           assert.strictEqual(toast.getAttribute('aria-hidden'), 'true', '`aria-hidden` attribute is set to `true`');
         });
+
+        test('is visible', function() {
+          toast = fixture('show');
+          toast.show();
+          assert.isTrue(toast.visible, '`visible` is true');
+          assert.isFalse(toast.hasAttribute('aria-hidden'), '`aria-hidden` attribute is not set');
+        });
+
+        test('show() will update `visible`', function() {
+          toast = fixture('basic');
+          toast.show();
+          assert.isTrue(toast.visible, '`visible` is true');
+        });
+
+        test('show() will auto-close toast after `duration` milliseconds', function(done) {
+          toast = fixture('basic');
+          toast.duration = 10;
+          var debounceSpy = sinon.spy(toast, 'debounce');
+          toast.show();
+          assert.isTrue(debounceSpy.called, '`debounce` was called');
+          setTimeout(function(){
+            assert.isFalse(toast.visible, '`visible` is false');
+            done();
+          }, 12);
+        });
+
+        suite('disable auto-close', function(){
+          var spy;
+          setup(function(){
+            toast = fixture('basic');
+            spy = sinon.spy(toast, 'debounce');
+          });
+          test('duration = Infinity', function() {
+            toast.duration = Infinity;
+            toast.show();
+            assert.isFalse(spy.called, '`debounce` was not called');
+          });
+
+          test('duration = 0', function() {
+            toast.duration = 0;
+            toast.show();
+            assert.isFalse(spy.called, '`debounce` was not called');
+          });
+
+          test('duration = -10', function() {
+            toast.duration = -10;
+            toast.show();
+            assert.isFalse(spy.called, '`debounce` was not called');
+          });
+        });
+
+        test('there is only 1 toast opened', function() {
+          var toast1 = fixture('basic');
+          var toast2 = fixture('show');
+          toast2.show();
+          toast1.show();
+          assert.isTrue(toast1.visible, 'toast1 is visible');
+          assert.isFalse(toast2.visible, 'toast2 is not visible');
+          toast2.show();
+          assert.isFalse(toast1.visible, 'toast1 is now not visible');
+          assert.isTrue(toast2.visible, 'toast2 is now visible');
+        });
+
       });
 
     </script>
