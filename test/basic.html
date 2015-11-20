@@ -17,6 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../iron-test-helpers/mock-interactions.js"></script>
 
     <link rel="import" href="../paper-toast.html">
 
@@ -104,6 +105,62 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           toast2.open();
           assert.isFalse(toast1.opened, 'toast1 is now not opened');
           assert.isTrue(toast2.opened, 'toast2 is now opened');
+        });
+
+        suite('swipe to close', function(){
+          setup(function(){
+            toast = fixture('show');
+          });
+
+          test('does not swipe when not opened', function() {
+            toast = fixture('basic');
+            MockInteractions.track(toast, 100, 0);
+            assert.isFalse(toast.opened);
+          });
+
+          test('cancels previous auto-close during swipe', function() {
+            var spy = sinon.spy(toast, 'cancelDebouncer');
+            MockInteractions.track(toast, 100, 0);
+            assert.isTrue(spy.called);
+          });
+
+          test('postpones auto-close if swipe does not trigger the close', function() {
+            toast = fixture('basic');
+            // This will trigger the auto-close.
+            toast.open();
+            // This will be called if auto-close is debounced again
+            var spy = sinon.spy(toast, 'debounce');
+            // swipe of 6px won't close the toast
+            MockInteractions.track(toast, 10, 0);
+            assert.isTrue(spy.called);
+          });
+
+          test('does not swipe when swipeDisabled is true', function() {
+            toast.swipeDisabled = true;
+            MockInteractions.track(toast, 100, 0);
+            assert.isTrue(toast.opened);
+          });
+
+          test('does not close if translation is between (-50px, 50px)', function() {
+            MockInteractions.track(toast, -49, 0);
+            assert.isTrue(toast.opened);
+            MockInteractions.track(toast, -10, 0);
+            assert.isTrue(toast.opened);
+            MockInteractions.track(toast, 10, 0);
+            assert.isTrue(toast.opened);
+            MockInteractions.track(toast, 49, 0);
+            assert.isTrue(toast.opened);
+          });
+
+          test('closes if translation is 50px (or more)', function() {
+            MockInteractions.track(toast, 50, 0);
+            assert.isFalse(toast.opened);
+          });
+
+          test('closes if translation is -50px (or less)', function() {
+            MockInteractions.track(toast, -50, 0);
+            assert.isFalse(toast.opened);
+          });
         });
 
       });
