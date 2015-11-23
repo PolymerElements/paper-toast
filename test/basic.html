@@ -31,7 +31,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <test-fixture id="show">
       <template>
-        <paper-toast></paper-toast>
+        <paper-toast opened></paper-toast>
       </template>
     </test-fixture>
 
@@ -43,21 +43,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         test('is hidden', function() {
           toast = fixture('basic');
-          assert.isFalse(toast.visible, '`visible` is false');
-          assert.strictEqual(toast.getAttribute('aria-hidden'), 'true', '`aria-hidden` attribute is set to `true`');
+          assert.isFalse(toast.opened, '`opened` is false');
         });
 
         test('is visible', function() {
           toast = fixture('show');
-          toast.show();
-          assert.isTrue(toast.visible, '`visible` is true');
-          assert.isFalse(toast.hasAttribute('aria-hidden'), '`aria-hidden` attribute is not set');
+          assert.isTrue(toast.opened, '`opened` is true');
         });
 
-        test('show() will update `visible`', function() {
+        test('show() will update `opened`', function() {
           toast = fixture('basic');
           toast.show();
-          assert.isTrue(toast.visible, '`visible` is true');
+          assert.isTrue(toast.opened, '`opened` is true');
         });
 
         test('show() will auto-close toast after `duration` milliseconds', function(done) {
@@ -67,7 +64,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           toast.show();
           assert.isTrue(debounceSpy.called, '`debounce` was called');
           setTimeout(function(){
-            assert.isFalse(toast.visible, '`visible` is false');
+            assert.isFalse(toast.opened, '`opened` is false');
             done();
           }, 12);
         });
@@ -100,13 +97,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         test('there is only 1 toast opened', function() {
           var toast1 = fixture('basic');
           var toast2 = fixture('show');
-          toast2.show();
-          toast1.show();
-          assert.isTrue(toast1.visible, 'toast1 is visible');
-          assert.isFalse(toast2.visible, 'toast2 is not visible');
-          toast2.show();
-          assert.isFalse(toast1.visible, 'toast1 is now not visible');
-          assert.isTrue(toast2.visible, 'toast2 is now visible');
+          toast2.open();
+          toast1.open();
+          assert.isTrue(toast1.opened, 'toast1 is opened');
+          assert.isFalse(toast2.opened, 'toast2 is not opened');
+          toast2.open();
+          assert.isFalse(toast1.opened, 'toast1 is now not opened');
+          assert.isTrue(toast2.opened, 'toast2 is now opened');
         });
 
       });

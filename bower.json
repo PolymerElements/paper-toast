@@ -20,6 +20,7 @@
   "main": "paper-toast.html",
   "dependencies": {
     "iron-a11y-announcer": "PolymerElements/iron-a11y-announcer#^1.0.0",
+    "iron-overlay-behavior": "PolymerElements/iron-overlay-behavior#~1.0.9",
     "paper-styles": "PolymerElements/paper-styles#^1.0.0",
     "polymer": "Polymer/polymer#^1.1.0"
   },
