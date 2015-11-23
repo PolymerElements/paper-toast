@@ -19,7 +19,6 @@
   },
   "main": "paper-toast.html",
   "dependencies": {
-    "paper-styles": "PolymerElements/paper-styles#^1.0.0",
     "polymer": "Polymer/polymer#^1.0.0",
     "iron-a11y-announcer": "polymerelements/iron-a11y-announcer#^1.0.0"
   },
