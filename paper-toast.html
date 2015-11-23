@@ -43,14 +43,22 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
         margin: 12px;
         font-size: 14px;
         cursor: default;
-        -webkit-transition: visibility 0.3s, -webkit-transform 0.3s, opacity 0.3s;
-        transition: visibility 0.3s, transform 0.3s, opacity 0.3s;
+        -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+        transition: transform 0.3s, opacity 0.3s;
 
-        visibility: hidden;
         bottom: -100px;
         opacity: 0;
         -webkit-transform: translateY(0px);
         transform: translateY(0px);
+      }
+
+      :host(.dragging) {
+        -webkit-transition: none;
+        transition: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
       }
 
       :host(.capsule) {
@@ -65,7 +73,6 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
       }
 
       :host(.paper-toast-open) {
-        visibility: visible;
         opacity: 1;
         -webkit-transform: translateY(-100px);
         transform: translateY(-100px);
@@ -109,11 +116,28 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
             type: Boolean,
             value: true
           },
+
+          /**
+           * Set to true to disable swiping on the toast.
+           */
+          swipeDisabled: {
+            type: Boolean
+          },
+        },
+
+        listeners: {
+          track: '_track',
+          transitionend: '_transitionEnd'
         },
 
         get visible() {
           console.warn('`visible` is deprecated, use `opened` instead');
           return this.opened;
+        },
+
+        get _canAutoClose() {
+          // can auto-close if duration is a positive finite number
+          return this.opened && this.duration > 0 && this.duration !== Infinity;
         },
 
         created: function() {
@@ -140,6 +164,7 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
          * Called when the value of `opened` changes.
          */
         _openedChanged: function() {
+          this.cancelDebouncer('close');
           if (this.opened) {
             if (PaperToast.currentToast && PaperToast.currentToast !== this) {
               PaperToast.currentToast.close();
@@ -148,8 +173,8 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
             this.fire('iron-announce', {
               text: this.text
             });
-            // auto-close if duration is a positive finite number
-            if (this.duration > 0 && this.duration !== Infinity) {
+
+            if (this._canAutoClose) {
               this.debounce('close', this.close, this.duration);
             }
           } else if (PaperToast.currentToast === this) {
@@ -164,6 +189,7 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
         _renderOpened: function() {
           this.classList.add('paper-toast-open');
         },
+
         /**
          * Overridden from `IronOverlayBehavior`.
          */
@@ -176,12 +202,58 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
          * iron-fit-behavior will set the inline style position: static, which
          * causes the toast to be rendered incorrectly when opened by default.
          */
-        _onIronResize: function(){
+        _onIronResize: function() {
           Polymer.IronOverlayBehaviorImpl._onIronResize.apply(this, arguments);
           if (this.opened) {
             // Make sure there is no inline style for position.
             this.style.position = '';
           }
+        },
+
+        /**
+         * _track handles swipe behavior.
+         * Opacity will be `1` for horizontal movement that is less than 20px.
+         * Toast will be closed if horizontal movement is >= 50px.
+         */
+        _track: function(e) {
+          if (this.swipeDisabled || !this.opened) {
+            return;
+          }
+          var dx = e.detail.dx;
+          // Values between [0.1, 1.0], will start fading after 20px of movement.
+          var opacity = Math.min(1.0, Math.max(0.1, (120 - Math.abs(dx)) / 100));
+          if (e.detail.state === 'start') {
+            this.toggleClass('dragging', true);
+            // Disable auto-close during swiping, will be triggered again
+            // on track end if necessary.
+            this.cancelDebouncer('close');
+          } else if (e.detail.state === 'end') {
+            this.toggleClass('dragging', false);
+            // close if distance is at least 50px
+            if (Math.abs(dx) >= 50) {
+              dx *= 2;
+              // Fade to transparent since we are closing.
+              opacity = 0;
+              // This will set opened, and toggle the right class.
+              this.close();
+            } else {
+              dx = 0;
+              opacity = '';
+              if (this._canAutoClose) {
+                this.debounce('close', this.close, this.duration);
+              }
+            }
+          }
+          this.transform(dx === 0 ? '' : 'translate3d('+ dx + 'px, -100px, 0)', this);
+          this.style.opacity = opacity;
+        },
+
+        /**
+         * Used to reset swipe inline styles in favor of class styles.
+         */
+        _transitionEnd: function () {
+          this.transform('', this);
+          this.style.opacity = '';
         }
       });
     })();
