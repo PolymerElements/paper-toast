@@ -78,7 +78,10 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
 
   <script>
     (function() {
-      var PaperToast = Polymer({
+      // Keeps track of the toast currently opened.
+      var currentToast = null;
+
+      Polymer({
         is: 'paper-toast',
 
         behaviors: [
@@ -141,10 +144,10 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
          */
         _openedChanged: function() {
           if (this.opened) {
-            if (PaperToast.currentToast && PaperToast.currentToast !== this) {
-              PaperToast.currentToast.close();
+            if (currentToast && currentToast !== this) {
+              currentToast.close();
             }
-            PaperToast.currentToast = this;
+            currentToast = this;
             this.fire('iron-announce', {
               text: this.text
             });
@@ -152,8 +155,8 @@ Material design: [Snackbards & toasts](https://www.google.com/design/spec/compon
             if (this.duration > 0 && this.duration !== Infinity) {
               this.debounce('close', this.close, this.duration);
             }
-          } else if (PaperToast.currentToast === this) {
-            PaperToast.currentToast = null;
+          } else if (currentToast === this) {
+            currentToast = null;
           }
           Polymer.IronOverlayBehaviorImpl._openedChanged.apply(this, arguments);
         },
