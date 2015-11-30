@@ -19,6 +19,37 @@ _[Demo and API Docs](https://elements.polymer-project.org/elements/paper-toast)_
 
 Material design: [Snackbards & toasts](https://www.google.com/design/spec/components/snackbars-toasts.html)
 
-`paper-toast` provides a subtle notification toast.
+`paper-toast` provides a subtle notification toast. Only one `paper-toast` will
+be visible on screen.
+
+Use `opened` to show the toast:
+
+Example:
+
+    <paper-toast text="Hello world!" opened></paper-toast>
+
+Also `open()` or `show()` can be used to show the toast:
+
+Example:
+
+    <paper-toast id="toast0" text="Welcome back!"></paper-toast>
+    <button onclick="document.querySelector('#toast0').open()">Login</button>
+
+Set `duration` to 0, a negative number or Infinity to persist the toast on screen:
+
+Example:
+
+    <paper-toast text="Terms and conditions" opened duration="0">
+      <a href="#">Show more</a>
+    </paper-toast>
+
+
+### Styling
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-toast-background-color` | The paper-toast background-color | `#323232`
+`--paper-toast-color` | The paper-toast color | `#f1f1f1`
 
 
