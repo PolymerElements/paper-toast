@@ -165,6 +165,7 @@ Custom property | Description | Default
         },
 
         created: function() {
+          this._autoClose = null;
           Polymer.IronA11yAnnouncer.requestAvailability();
         },
 
@@ -187,6 +188,10 @@ Custom property | Description | Default
          * Called when the value of `opened` changes.
          */
         _openedChanged: function() {
+          if (this._autoClose !== null) {
+            this.cancelAsync(this._autoClose);
+            this._autoClose = null;
+          }
           if (this.opened) {
             if (currentToast && currentToast !== this) {
               currentToast.close();
@@ -196,7 +201,7 @@ Custom property | Description | Default
               text: this.text
             });
             if (this._canAutoClose) {
-              this.debounce('close', this.close, this.duration);
+              this._autoClose = this.async(this.close, this.duration);
             }
           } else if (currentToast === this) {
             currentToast = null;
