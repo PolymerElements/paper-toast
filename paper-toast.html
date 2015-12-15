@@ -177,6 +177,14 @@ Custom property | Description | Default
         },
 
         /**
+         * Set the toast's text and show.
+         */
+        showText: function(text) {
+            this.text = text;
+            this.open();
+        },
+
+        /**
          * Hide the toast. Same as `close()` from `IronOverlayBehavior`.
          */
         hide: function() {
