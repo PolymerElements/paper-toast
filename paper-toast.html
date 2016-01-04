@@ -29,8 +29,14 @@ Also `open()` or `show()` can be used to show the toast:
 
 Example:
 
-    <paper-toast id="toast0" text="Welcome back!"></paper-toast>
-    <button onclick="document.querySelector('#toast0').open()">Login</button>
+    <paper-button on-click="openToast">Open Toast</paper-button>
+    <paper-toast id="toast" text="Hello world!"></paper-toast>
+
+    ...
+
+    openToast: function() {
+      this.$.toast.open();
+    }
 
 Set `duration` to 0, a negative number or Infinity to persist the toast on screen:
 
