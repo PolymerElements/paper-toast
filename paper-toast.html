@@ -11,7 +11,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-a11y-announcer/iron-a11y-announcer.html">
 <link rel="import" href="../iron-overlay-behavior/iron-overlay-behavior.html">
-<link rel="import" href="../paper-styles/typography.html">
 
 <!--
 Material design: [Snackbards & toasts](https://www.google.com/design/spec/components/snackbars-toasts.html)
@@ -54,6 +53,9 @@ Custom property | Description | Default
 ----------------|-------------|----------
 `--paper-toast-background-color` | The paper-toast background-color | `#323232`
 `--paper-toast-color` | The paper-toast color | `#f1f1f1`
+
+This element applies the mixin `--paper-font-common-base` but does not import `paper-styles/typography.html`.
+In order to apply the `Roboto` font to this element, make sure you've imported `paper-styles/typography.html`.
 
 @group Paper Elements
 @element paper-toast
