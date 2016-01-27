@@ -33,20 +33,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <demo-snippet class="centered-demo">
     <template>
       <paper-button raised onclick="toast0.open()">Default toast</paper-button>
-      <paper-button raised onclick="toast1.open()">With content</paper-button>
-
       <paper-toast id="toast0" text="This toast auto-closes after 3 seconds"></paper-toast>
-      <paper-toast id="toast1" text="This toast auto-closes after 3 seconds">
-        <span role="button" tabindex="0" onclick="toast1.close()" style="color: #eeff41;margin: 10px">Close now!</span>
-      </paper-toast>
     </template>
   </demo-snippet>
 
   <h3>Toast does not auto-close when <code>duration</code> is negative, <code>0</code>, or <code>Infinity</code></h3>
   <demo-snippet class="centered-demo">
     <template>
-      <paper-button raised onclick="toast2.toggle()">Toggle toast</paper-button>
-      <paper-toast id="toast2" duration="0" text="This toast will stay opened until you close it, or open another toast."></paper-toast>
+      <style>
+        .yellow-button {
+          text-transform: none;
+          color: #eeff41;
+        }
+      </style>
+
+      <paper-button raised onclick="toast1.open()">Persistent toast</paper-button>
+
+      <paper-toast id="toast1" duration="0" text="This toast will stay opened until you close it, or open another toast.">
+        <paper-button onclick="toast1.toggle()" class="yellow-button">Close now!</paper-button>
+      </paper-toast>
     </template>
   </demo-snippet>
 
@@ -54,16 +59,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <demo-snippet class="centered-demo">
     <template>
       <style is="custom-style">
-        #toast3 {
+        #toast2 {
           --paper-toast-background-color: red;
           --paper-toast-color: white;
         }
       </style>
-      <paper-button raised onclick="toast3.open()">With style</paper-button>
-      <paper-button raised onclick="toast4.open()">Fit bottom</paper-button>
 
-      <paper-toast id="toast3" text="This toast has color!"></paper-toast>
-      <paper-toast id="toast4" class="fit-bottom" text="This toast fits bottom"></paper-toast>
+      <paper-button raised onclick="toast2.open()">Styled toast</paper-button>
+      
+      <paper-toast id="toast2" class="fit-bottom" text="This toast is red and fits bottom!"></paper-toast>
     </template>
   </demo-snippet>
 </body>
