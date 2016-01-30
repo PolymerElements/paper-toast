@@ -170,9 +170,23 @@ Custom property | Description | Default
         },
 
         /**
-         * Show the toast. Same as `open()` from `IronOverlayBehavior`.
+         * Show the toast. Without arguments, this is the same as `open()` from `IronOverlayBehavior`.
+         * @param {Object|string|undefined} properties Properties to be set before opening the toast.
+         * e.g. `toast.show('hello')` or `toast.show({text: 'hello', duration: 3000})`
          */
-        show: function() {
+        show: function(properties) {
+          if (typeof properties == 'string') {
+            properties = { text: properties };
+          }
+          for (var property in properties) {
+            if (property.indexOf('_') === 0) {
+              console.warn('The property "' + property + '" is private and was not set.');
+            } else if (property in this) {
+              this[property] = properties[property];
+            } else {
+              console.warn('The property "' + property + '" is not valid.');
+            }
+          }
           this.open();
         },
 
