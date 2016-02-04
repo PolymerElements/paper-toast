@@ -74,6 +74,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }, 12);
       });
 
+      test('show() accepts valid properties', function() {
+        toast = fixture('basic');
+        toast.show({text: 'hello world', duration: 20});
+        assert.isTrue(toast.opened, '`opened` is true');
+        assert.equal(toast.text, 'hello world', '`text` is correct');
+        assert.equal(toast.duration, 20, '`duration` is correct');
+      });
+
+      test('show() does not accept invalid properties', function() {
+        toast = fixture('basic');
+        toast.show({foo: 'bar'});
+        assert.isUndefined(toast.foo, '`foo` is not a valid property and will not be set');
+        assert.isTrue(toast.opened, '`opened` is true');
+      });
+
+      test('show() does not accept private properties', function() {
+        toast = fixture('basic');
+        var temp = toast._manager;
+        toast.show({_manager: 'bar'});
+        assert.equal(toast._manager, temp, '`_manager` is a private property and will not be set');
+        assert.isTrue(toast.opened, '`opened` is true');
+      });
+
+      test('show() accepts a string argument as the text parameter', function() {
+        toast = fixture('basic');
+        toast.show('hello world 2');
+        assert.equal(toast.text, 'hello world 2', '`text is correct`');
+      });
+
       suite('disable auto-close', function() {
         var spy;
         setup(function() {
