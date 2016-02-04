@@ -152,7 +152,11 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
           noCancelOnOutsideClick: {
             type: Boolean,
             value: true
-          },
+          }
+        },
+
+        listeners: {
+          'transitionend': '__onTransitionEnd'
         },
 
         /**
@@ -190,6 +194,25 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
          */
         hide: function() {
           this.close();
+        },
+
+        /**
+         * Called on transitions of the toast, indicating a finished animation
+         *
+         * @private
+         */
+        __onTransitionEnd: function(e) {
+          // there are at least three different transitions that are happening when opening and
+          // closing the toast. The last one so far is for `opacity`.
+          // This marks the end of the transition, so we check for this to determine if this
+          // is the correct event.
+          if (e && e.target === this && e.propertyName === 'opacity') {
+            if (this.opened) {
+              this._finishRenderOpened();
+            } else {
+              this._finishRenderClosed();
+            }
+          }
         },
 
         /**

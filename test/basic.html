@@ -73,6 +73,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           done();
         }, 12);
       });
+      
+      test('toast fires closed event', function(done) {
+        toast = fixture('show');
+        toast.addEventListener('iron-overlay-opened', toast.close.bind(toast));
+        toast.addEventListener('iron-overlay-closed', function() {
+          done();
+        });
+      });
+
+      test('toast fires opened event', function(done) {
+        toast = fixture('show');
+          toast.addEventListener('iron-overlay-opened', function() {
+            done();
+        });
+      });
 
       suite('disable auto-close', function() {
         var spy;
