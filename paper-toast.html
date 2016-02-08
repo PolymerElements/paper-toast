@@ -82,9 +82,8 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
         margin: 12px;
         font-size: 14px;
         cursor: default;
-        -webkit-transition: visibility 0.3s, -webkit-transform 0.3s, opacity 0.3s;
-        transition: visibility 0.3s, transform 0.3s, opacity 0.3s;
-        visibility: hidden;
+        -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+        transition: transform 0.3s, opacity 0.3s;
         opacity: 0;
         -webkit-transform: translateY(100px);
         transform: translateY(100px);
@@ -103,7 +102,6 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
       }
 
       :host(.paper-toast-open) {
-        visibility: visible;
         opacity: 1;
         -webkit-transform: translateY(0px);
         transform: translateY(0px);
@@ -211,12 +209,25 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
         },
 
         /**
+         * Overridden from `IronFitBehavior`.
+         * Positions the toast at the bottom left of fitInto.
+         */
+        center: function () {
+          if (this.fitInto === window) {
+            this.style.bottom = this.style.left = '';
+          } else {
+            var rect = this.fitInto.getBoundingClientRect();
+            this.style.left = rect.left + 'px';
+            this.style.bottom = (window.innerHeight - rect.bottom) + 'px';
+          }
+        },
+
+        /**
          * Called on transitions of the toast, indicating a finished animation
-         *
          * @private
          */
         __onTransitionEnd: function(e) {
-          // there are at least three different transitions that are happening when opening and
+          // there are different transitions that are happening when opening and
           // closing the toast. The last one so far is for `opacity`.
           // This marks the end of the transition, so we check for this to determine if this
           // is the correct event.

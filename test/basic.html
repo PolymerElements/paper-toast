@@ -21,6 +21,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <link rel="import" href="../paper-toast.html">
 
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
 </head>
 
 <body>
@@ -37,7 +43,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="contained">
+    <template>
+      <paper-toast class="fit-bottom"></paper-toast>
+      <div style="margin: 50px; width: 100px; height: 100px; background-color: orange;"></div>
+    </template>
+  </test-fixture>
+
   <script>
+
     suite('basic', function() {
 
       var toast;
@@ -73,19 +87,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           done();
         }, 12);
       });
-      
-      test('toast fires closed event', function(done) {
+
+      test('toast fires opened event', function(done) {
         toast = fixture('show');
-        toast.addEventListener('iron-overlay-opened', toast.close.bind(toast));
-        toast.addEventListener('iron-overlay-closed', function() {
+        toast.addEventListener('iron-overlay-opened', function() {
           done();
         });
       });
 
-      test('toast fires opened event', function(done) {
-        toast = fixture('show');
-          toast.addEventListener('iron-overlay-opened', function() {
-            done();
+      test('toast fires closed event', function(done) {
+        toast = fixture('basic');
+        toast.show({duration: 350});
+        toast.addEventListener('iron-overlay-closed', function() {
+          done();
         });
       });
 
@@ -173,6 +187,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             done();
           }, 10);
         }, 5);
+      });
+
+      test('toast is positioned according at the bottom left of its fitInto', function() {
+        var f = fixture('contained');
+        var toast = f[0];
+        var container = f[1];
+        toast.fitInto = container;
+        toast.center();
+        var style = getComputedStyle(toast);
+        assert.equal(style.left, '50px', 'left');
+        // Should be 150px from top, (100px of height + 50px of margin-top)
+        // aka window height - 150 from bottom.
+        assert.equal(style.bottom, (window.innerHeight - 150) + 'px', 'bottom');
       });
 
       suite('a11y', function() {
