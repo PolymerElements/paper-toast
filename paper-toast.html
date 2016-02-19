@@ -90,6 +90,13 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
         @apply(--paper-font-common-base);
       }
 
+      :host(.open-from-top) {
+        bottom: inherit;
+        top:0;
+        -webkit-transform: translateY(-100px);
+        transform: translateY(-100px);
+      }
+
       :host(.capsule) {
         border-radius: 24px;
       }
