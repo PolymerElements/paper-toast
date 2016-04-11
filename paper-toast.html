@@ -173,7 +173,7 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
          * @deprecated
          */
         get visible() {
-          console.warn('`visible` is deprecated, use `opened` instead');
+          Polymer.Base._warn('`visible` is deprecated, use `opened` instead');
           return this.opened;
         },
 
@@ -201,11 +201,11 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
           }
           for (var property in properties) {
             if (property.indexOf('_') === 0) {
-              console.warn('The property "' + property + '" is private and was not set.');
+              Polymer.Base._warn('The property "' + property + '" is private and was not set.');
             } else if (property in this) {
               this[property] = properties[property];
             } else {
-              console.warn('The property "' + property + '" is not valid.');
+              Polymer.Base._warn('The property "' + property + '" is not valid.');
             }
           }
           this.open();
