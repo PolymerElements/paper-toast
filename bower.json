@@ -21,6 +21,7 @@
   "dependencies": {
     "iron-a11y-announcer": "PolymerElements/iron-a11y-announcer#^1.0.0",
     "iron-overlay-behavior": "PolymerElements/iron-overlay-behavior#^1.0.9",
+    "iron-fit-behavior": "PolymerElements/iron-fit-behavior#^1.1.0",
     "polymer": "Polymer/polymer#^1.5.0"
   },
   "devDependencies": {
