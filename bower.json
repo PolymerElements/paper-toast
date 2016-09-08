@@ -20,7 +20,7 @@
   "main": "paper-toast.html",
   "dependencies": {
     "iron-a11y-announcer": "PolymerElements/iron-a11y-announcer#^1.0.0",
-    "iron-overlay-behavior": "https://github.com/notwaldorf/iron-overlay.git#2.0-preview",
+    "iron-overlay-behavior": "https://github.com/notwaldorf/iron-overlay-behavior.git#2.0-preview",
     "polymer": "https://github.com/PolymerLabs/alacarte.git#master"
   },
   "devDependencies": {
