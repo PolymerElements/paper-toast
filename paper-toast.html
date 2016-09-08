@@ -232,11 +232,13 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
           }
           for (var property in properties) {
             if (property.indexOf('_') === 0) {
-              Polymer.Base._warn('The property "' + property + '" is private and was not set.');
+              // TODO(valdrin) uncomment after PolymerLabs/alacarte#88 is fixed.
+              //Polymer.Base._warn('The property "' + property + '" is private and was not set.');
             } else if (property in this) {
               this[property] = properties[property];
             } else {
-              Polymer.Base._warn('The property "' + property + '" is not valid.');
+              // TODO(valdrin) uncomment after PolymerLabs/alacarte#88 is fixed.
+              //Polymer.Base._warn('The property "' + property + '" is not valid.');
             }
           }
           this.open();
