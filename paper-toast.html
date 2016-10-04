@@ -230,15 +230,15 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
           if (typeof properties == 'string') {
             properties = { text: properties };
           }
+          // TODO(valdrin) uncomment after Polymer/polymer#3926 is fixed.
+          var warn = Polymer.Base._warn || console.warn;
           for (var property in properties) {
             if (property.indexOf('_') === 0) {
-              // TODO(valdrin) uncomment after PolymerLabs/alacarte#88 is fixed.
-              //Polymer.Base._warn('The property "' + property + '" is private and was not set.');
+              warn('The property "' + property + '" is private and was not set.');
             } else if (property in this) {
               this[property] = properties[property];
             } else {
-              // TODO(valdrin) uncomment after PolymerLabs/alacarte#88 is fixed.
-              //Polymer.Base._warn('The property "' + property + '" is not valid.');
+              warn('The property "' + property + '" is not valid.');
             }
           }
           this.open();
