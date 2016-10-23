@@ -83,9 +83,17 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
         -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
         transition: transform 0.3s, opacity 0.3s;
         opacity: 0;
+        @apply(--paper-font-common-base);
+      }
+
+      :host(.vertical-align-bottom) {
         -webkit-transform: translateY(100px);
         transform: translateY(100px);
-        @apply(--paper-font-common-base);
+      }
+
+      :host(.vertical-align-top) {
+        -webkit-transform: translateY(-100px);
+        transform: translateY(-100px);
       }
 
       :host(.capsule) {
@@ -150,7 +158,8 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
            */
           verticalAlign: {
             type: String,
-            value: 'bottom'
+            value: 'bottom',
+            observer: '_verticalAlign'
           },
 
           /**
@@ -216,6 +225,11 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
         created: function() {
           this._autoClose = null;
           Polymer.IronA11yAnnouncer.requestAvailability();
+        },
+
+        // Setup the correct translateY based on vertical alignmnet
+        _verticalAlign: function(verticalAlign) {
+          this.classList.add('vertical-align-' + verticalAlign)
         },
 
         /**
