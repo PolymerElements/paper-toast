@@ -240,6 +240,14 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
         },
 
         /**
+         * Shortcut to set text and show the toast with a single method.
+         */
+        showText: function(text) {
+            this.text = text;
+            this.open();
+        },
+
+        /**
          * Hide the toast. Same as `close()` from `IronOverlayBehavior`.
          */
         hide: function() {
