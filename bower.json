@@ -20,7 +20,7 @@
   "main": "paper-toast.html",
   "dependencies": {
     "iron-a11y-announcer": "PolymerElements/iron-a11y-announcer#1 - 2",
-    "iron-overlay-behavior": "PolymerElements/iron-overlay-behavior#click-through-property",
+    "iron-overlay-behavior": "PolymerElements/iron-overlay-behavior#^2.1.0",
     "iron-fit-behavior": "PolymerElements/iron-fit-behavior#1 - 2",
     "polymer": "Polymer/polymer#1.9 - 2"
   },
@@ -36,7 +36,7 @@
     "1.x": {
       "dependencies": {
         "iron-a11y-announcer": "PolymerElements/iron-a11y-announcer#^1.0.0",
-        "iron-overlay-behavior": "PolymerElements/iron-overlay-behavior#click-through-property",
+        "iron-overlay-behavior": "PolymerElements/iron-overlay-behavior#^2.1.0",
         "iron-fit-behavior": "PolymerElements/iron-fit-behavior#^1.1.0",
         "polymer": "Polymer/polymer#^1.9"
       },
