@@ -1,0 +1,10 @@
+{
+  "name": "@polymer/paper-toast",
+  "private": true,
+  "description": "A material design notification toast",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/paper-toast.git"
+  },
+  "license": "http://polymer.github.io/LICENSE.txt"
+}
