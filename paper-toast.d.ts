@@ -107,29 +107,29 @@ interface PaperToastElement extends Polymer.Element, Polymer.IronOverlayBehavior
   /**
    * Read-only. Deprecated. Use `opened` from `IronOverlayBehavior`.
    */
-  visible: object|null;
+  readonly visible: any;
 
   /**
    * Read-only. Can auto-close if duration is a positive finite number.
    */
-  _canAutoClose: object|null;
-  created(): any;
+  readonly _canAutoClose: any;
+  created(): void;
 
   /**
    * Overridden from `IronOverlayBehavior`.
    * Called when the value of `opened` changes.
    */
-  _openedChanged(): any;
+  _openedChanged(): void;
 
   /**
    * Overridden from `IronOverlayBehavior`.
    */
-  _renderOpened(): any;
+  _renderOpened(): void;
 
   /**
    * Overridden from `IronOverlayBehavior`.
    */
-  _renderClosed(): any;
+  _renderClosed(): void;
 
   /**
    * Show the toast. Without arguments, this is the same as `open()` from `IronOverlayBehavior`.
@@ -137,12 +137,12 @@ interface PaperToastElement extends Polymer.Element, Polymer.IronOverlayBehavior
    * @param properties Properties to be set before opening the toast.
    * e.g. `toast.show('hello')` or `toast.show({text: 'hello', duration: 3000})`
    */
-  show(properties?: object|string|null): any;
+  show(properties?: object|string|null): void;
 
   /**
    * Hide the toast. Same as `close()` from `IronOverlayBehavior`.
    */
-  hide(): any;
+  hide(): void;
 }
 
 interface HTMLElementTagNameMap {
