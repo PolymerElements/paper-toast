@@ -41,6 +41,19 @@ Example:
 </paper-toast>
 ```
 
+When using a layout structure, e.g. `<app-drawer>` or `<app-layout>`, add `<paper-toast>` to the top level (`<body>`) element, outside the structure, e.g.:
+
+```html
+  <!-- ... -->
+  </app-drawer-layout>
+  <paper-toast id="toast"></paper-toast>
+</template>
+```
+
+Otherwise, the toast may be partially obstructed by a drawer.
+
+You can then use custom events to communicate with it from within a child components, using `addEventListener` and `dispatchEvent`.
+
 ### Styling
 
 The following custom properties and mixins are available for styling:
