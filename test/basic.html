@@ -20,6 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
 
+  <link rel="import" href="test-overlay.html">
   <link rel="import" href="../paper-toast.html">
 
   <style>
@@ -50,6 +51,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div style="margin: 50px; width: 100px; height: 100px; background-color: orange;"></div>
     </template>
   </test-fixture>
+
+  <test-fixture id="multiple">
+    <template>
+      <test-overlay></test-overlay>
+      <paper-toast></paper-toast>
+    </template>
+  </test-fixture>
+
 
   <script>
 
@@ -214,6 +223,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           assert.equal(rect.bottom, 150, 'bottom');
           done();
         });
+      });
+
+      suite('allow-click-through', function() {
+        
+        var overlay;
+        
+        setup(function() {
+          var f = fixture('multiple');
+          overlay = f[0];
+          toast = f[1];
+        });
+
+        test('default value is true', function() {
+          assert.isTrue(toast.allowClickThrough);
+        });
+        
+
+        test('outside click handled by overlay below', function(done) {
+          overlay.open();
+          toast.show();
+          toast.addEventListener('iron-overlay-opened', function() {
+            document.body.click();
+            assert.isFalse(overlay.opened, 'overlay closed');
+            assert.isTrue(toast.opened, 'toast stays open');
+            done();
+          });
+        });
+
       });
 
       suite('a11y', function() {

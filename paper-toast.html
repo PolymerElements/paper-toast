@@ -190,6 +190,15 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
           noAutoFocus: {
             type: Boolean,
             value: true
+          },
+
+          /**
+           * Overridden from `IronOverlayBehavior`.
+           * Set to false to prevent outside clicks to reach overlays below the toast. 
+           */
+          allowClickThrough: {
+            type: Boolean,
+            value: true
           }
         },
 
