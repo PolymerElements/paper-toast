@@ -3,7 +3,7 @@
 
 ## &lt;paper-toast&gt;
 
-Material design: [Snackbars & toasts](https://www.google.com/design/spec/components/snackbars-toasts.html)
+Material design: [Snackbars & toasts](https://material.io/guidelines/components/snackbars-toasts.html)
 
 `paper-toast` provides a subtle notification toast. Only one `paper-toast` will
 be visible on screen.
