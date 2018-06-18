@@ -217,13 +217,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             toast.fitInto = container;
             toast.open();
             // Wait for it to be opened, so it will be sized correctly.
-            toast.addEventListener('iron-overlay-opened', function() {
+            setTimeout(function() {
               var rect = toast.getBoundingClientRect();
               assert.equal(rect.left, 50, 'left ok');
               // 150px from top, (100px of height + 50px of margin-top)
               assert.equal(rect.bottom, 150, 'bottom');
               done();
-            });
+            }, 500);
           });
 
       suite('a11y', function() {
