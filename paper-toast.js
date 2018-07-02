@@ -7,6 +7,16 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
+import { Base } from '@polymer/polymer/polymer-legacy.js';
+
+import { IronA11yAnnouncer } from '@polymer/iron-a11y-announcer/iron-a11y-announcer.js';
+import { IronOverlayBehavior, IronOverlayBehaviorImpl } from '@polymer/iron-overlay-behavior/iron-overlay-behavior.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+
+// Keeps track of the toast currently opened.
+var currentToast = null;
+
 /**
 Material design: [Snackbars & toasts](https://www.google.com/design/spec/components/snackbars-toasts.html)
 
@@ -57,21 +67,6 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
 @demo demo/index.html
 @hero hero.svg
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import { Base } from '@polymer/polymer/polymer-legacy.js';
-
-import { IronA11yAnnouncer } from '@polymer/iron-a11y-announcer/iron-a11y-announcer.js';
-import { IronOverlayBehavior, IronOverlayBehaviorImpl } from '@polymer/iron-overlay-behavior/iron-overlay-behavior.js';
-import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-import { html } from '@polymer/polymer/lib/utils/html-tag.js';
-
-// Keeps track of the toast currently opened.
-var currentToast = null;
-
 Polymer({
   _template: html`
     <style>
