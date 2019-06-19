@@ -65,12 +65,11 @@ This element applies the mixin `--paper-font-common-base` but does not import
 `paper-styles/typography.html`. In order to apply the `Roboto` font to this
 element, make sure you've imported `paper-styles/typography.html`.
 
-@group Paper Elements
 @element paper-toast
 @demo demo/index.html
-@hero hero.svg
 */
 Polymer({
+  /** @override */
   _template: html`
     <style>
       :host {
@@ -187,6 +186,7 @@ Polymer({
     return this.duration > 0 && this.duration !== Infinity;
   },
 
+  /** @override */
   created: function() {
     this._autoClose = null;
     IronA11yAnnouncer.requestAvailability();
