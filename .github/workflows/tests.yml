@@ -12,10 +12,10 @@ jobs:
       with:
         node-version: 14
 
-    - name: Polymer CLI install
+    - name: Install the Polymer CLI
       run: npm install -g polymer-cli
 
-    - name: NPM install
+    - name: Install NPM dependencies
       run: npm ci
 
     - name: Check formatting
@@ -24,5 +24,5 @@ jobs:
         '\n\033[31mERROR:\033[0m Project is not formatted. Please run "npm run
         format".' && false)
 
-    - name: WCT local (Chrome/Firefox)
+    - name: Test in local browsers (Chrome/Firefox)
       run: polymer test --module-resolution=node --npm
