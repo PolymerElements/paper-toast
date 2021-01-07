@@ -25,7 +25,7 @@ jobs:
         format".' && false)
 
     - name: Test in local browsers (Chrome/Firefox)
-      run: polymer test --module-resolution node --npm --skip-plugin sauce
+      run: polymer test --module-resolution node --npm
 
   wct-sauce:
     # Skip if this is from a forked repository because we can't access Sauce
@@ -56,4 +56,14 @@ jobs:
       env:
         SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
         SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
-      run: polymer test --module-resolution node --npm --sauce 'default'
+      run: >-
+        polymer test --module-resolution node --npm
+        --sauce 'Windows 10/microsoftedge'
+        --sauce 'Windows 10/internet explorer@11'
+        --sauce 'macOS 10.13/safari@11'
+        --sauce 'OS X 10.11/safari@10'
+        --sauce 'OS X 10.11/safari@9'
+        --sauce 'Linux/chrome'
+        --sauce 'Windows 10/chrome@beta'
+        --sauce 'Windows 10/chrome'
+        --sauce 'Windows 10/firefox'
