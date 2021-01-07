@@ -1,0 +1,28 @@
+name: tests
+
+on: [push, pull_request]
+
+jobs:
+  wct-local:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 14
+
+    - name: Polymer CLI install
+      run: npm install -g polymer-cli
+
+    - name: NPM install
+      run: npm ci
+
+    - name: Check formatting
+      run: >-
+        npm run format && git diff --exit-code || (echo -e
+        '\n\033[31mERROR:\033[0m Project is not formatted. Please run "npm run
+        format".' && false)
+
+    - name: WCT local (Chrome/Firefox)
+      run: polymer test --module-resolution=node --npm
