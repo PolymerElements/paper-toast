@@ -236,6 +236,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               'text announced');
         });
 
+        test('show() will not announce text if noIronAnnounce is set', function() {
+          toast = fixture('basic');
+          toast.noIronAnnounce = true;
+          var spy = sinon.spy(toast, 'fire');
+          toast.text = 'announce!';
+          toast.show();
+          assert.isFalse(spy.called, 'text announced');
+        });
+
         test('hide() will not announce text', function() {
           toast = fixture('show');
           var spy = sinon.spy(toast, 'fire');

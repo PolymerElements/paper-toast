@@ -163,7 +163,15 @@ Polymer({
      * Set to true to disable auto-focusing the toast or child nodes with
      * the `autofocus` attribute` when the overlay is opened.
      */
-    noAutoFocus: {type: Boolean, value: true}
+    noAutoFocus: {type: Boolean, value: true},
+
+    /**
+     * Set to true to prevent paper-toast from dispatching 'iron-announce'
+     * events. (`<iron-a11y-announcer>` updates an `aria-live` region in
+     * response to these events, causing the region to be automatically read by
+     * screen readers.)
+     */
+    noIronAnnounce: {type: Boolean, value: false},
   },
 
   listeners: {'transitionend': '__onTransitionEnd'},
@@ -254,7 +262,9 @@ Polymer({
         currentToast.close();
       }
       currentToast = this;
-      this.fire('iron-announce', {text: this.text});
+      if (!this.noIronAnnounce) {
+        this.fire('iron-announce', {text: this.text});
+      }
       if (this._canAutoClose) {
         this._autoClose = this.async(this.close, this.duration);
       }
